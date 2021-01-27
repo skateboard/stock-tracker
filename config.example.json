@@ -1,0 +1,6 @@
+{
+  "discord_token": "TOKEN",
+  "guild_id": "GUILD ID",
+  "staff_role_id": "STAFF ID",
+  "loop_time": 30
+}
