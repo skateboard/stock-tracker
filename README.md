@@ -5,7 +5,7 @@
 <br />
 
 # Introduction
-This is a discord bot that can track certain stocks and get information on certain stocks!
+This is a discord bot that can track certain stocks and get information on certain stocks using YahooFinance API
 
 # Commands
 	#Everyone
