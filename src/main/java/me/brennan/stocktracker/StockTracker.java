@@ -2,8 +2,10 @@ package me.brennan.stocktracker;
 
 import me.brennan.stocktracker.command.CommandManager;
 import me.brennan.stocktracker.listeners.MessageListener;
+import me.brennan.stocktracker.thread.ActivityThread;
 import me.brennan.stocktracker.thread.TrackerThread;
 import me.brennan.stocktracker.util.ConfigUtil;
+import me.brennan.stocktracker.util.MarketUtil;
 import me.brennan.stocktracker.util.model.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Brennan
@@ -46,11 +49,14 @@ public enum StockTracker {
 
         this.jda = JDABuilder
                 .createDefault(config.getToken())
-                .setStatus(OnlineStatus.IDLE)
-                .setActivity(Activity.watching("The markets"))
                 .addEventListeners(new MessageListener())
                 .build()
                 .awaitReady();
+
+        // do cool status change
+        this.executorService
+                .scheduleAtFixedRate(new ActivityThread(),
+                        0, 1, TimeUnit.HOURS);
 
         this.guild = jda.getGuildById(config.getGuildID());
 
@@ -67,6 +73,10 @@ public enum StockTracker {
 
     public Config getConfig() {
         return config;
+    }
+
+    public JDA getJda() {
+        return jda;
     }
 
     public Guild getGuild() {

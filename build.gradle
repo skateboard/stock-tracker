@@ -1,19 +1,41 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'me.brennan'
+version '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
     jcenter()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'com.yahoofinance-api', name: 'YahooFinanceAPI', version: '3.15.0'
-    compile group: 'net.dv8tion', name: 'JDA', version: '4.2.0_211'
-    implementation 'com.google.code.gson:gson:+'
+configurations {
+    shaded
 
+    compile.extendsFrom shaded
+}
+
+dependencies {
+    shaded 'com.yahoofinance-api:YahooFinanceAPI:3.15.0'
+    shaded 'net.dv8tion:JDA:4.2.0_211'
+    shaded 'com.google.code.gson:gson:+'
+}
+
+shadowJar {
+    configurations = [project.configurations.shaded]
+}
+
+build {
+    dependsOn shadowJar
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "Main")
+    }
 }
